@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import alias from "@/utils/alias"
+
 defineProps<{ msg: string }>()
 
 const count = ref(0)
@@ -29,6 +31,9 @@ const count = ref(0)
     in your IDE for a better DX
   </p>
   <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+
+  
+  <button type="button" @click="alias">点击触发引用</button>
 </template>
 
 <style scoped>

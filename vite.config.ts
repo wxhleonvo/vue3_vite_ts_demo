@@ -1,72 +1,29 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
-import { resolve } from "path"
-
-//引入插件
-import AutoImport from "unplugin-auto-import/vite"
-import Components from "unplugin-vue-components/vite"
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-//引入依赖
-import autoprefixer from "autoprefixer"
-import postcsspxtorem from "postcss-pxtorem"
-//引入依赖
-import path from "path"
-import { createSvgIconsPlugin } from "vite-plugin-svg-icons"
- 
 
-// https://vitejs.dev/config/
+const { resolve } = require("path");
+
 export default defineConfig({
   plugins: [
     vue(),
-    //使用插件
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
     Components({
       resolvers: [ElementPlusResolver()],
-    }),
-    //启用svg插件
-    createSvgIconsPlugin({
-      // 指定图标文件夹，绝对路径（NODE代码）
-      iconDirs: [path.resolve(process.cwd(), "src/svgs")],
     })
   ],
-  //进行配置
   resolve: {
     alias: {
+      "src": resolve(__dirname, "src"),
       '@': resolve(__dirname, 'src'),
-    },
-    // 类型： string[] 导入时想要省略的扩展名列表。
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs']
-  },
-  //配置适配方案
-  css: {
-    postcss: {
-      plugins: [
-        autoprefixer({
-          overrideBrowserslist: [
-            "Android 4.1",
-            "iOS 7.1",
-            "Chrome > 31",
-            "ff > 31",
-            "ie >= 8",
-            "last 10 versions", // 所有主流浏览器最近10版本用
-          ],
-          grid: true
-        }),
-        postcsspxtorem({
-          rootValue: 192, // 设计稿宽度的1/ 10 例如设计稿按照 1920设计 此处就为192
-          propList: ["*", "!border"], // 除 border 外所有px 转 rem
-          selectorBlackList: [".el-"], // 过滤掉.el-开头的class，不进行rem转换
-        })
-      ],
     },
   },
   server: {
-    //host: '0.0.0.0', //ip地址
-    port: 8088, //设置服务启动端口号
-    //open: true, //启动后是否自动打开浏览器    
+    port: 8088, //启动端口
     proxy: { // 配置反向代理: 开发环境请求 和 生产环境请求
       "/dev-api": { // “dev-api” 以及前置字符串会被替换为真正域名
         target: "http://localhost:9017/", // 请求域名，反向代理地址
@@ -81,5 +38,40 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/prod-api/, "/api")
       }
     }
-  }
-})
+    // 设置 https 代理
+    // proxy: {
+    //   '/api': {
+    //     target: 'your https address',
+    //     changeOrigin: true,
+    //     rewrite: (path: string) => path.replace(/^\/api/, '')
+    //   }
+    // }
+  },
+  build: {
+    //minify: 'terser',
+    outDir: "dist",
+    rollupOptions: {
+      output: {
+        assetFileNames: "[ext]/[name].[hash].[ext]",
+        chunkFileNames: "js/[name].[hash].js",
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+        },
+      },
+    },
+    terserOptions: {
+      compress: {
+        keep_infinity: true,
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+  },
+});
+

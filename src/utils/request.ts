@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import qs from 'qs'
 import { setLocalStorage, getLocalStorage } from './localstorage'
-import { URL, TIMEOUT, SOURCE_URL } from "@/config";
+import { URL, TIMEOUT, SOURCE_URL } from "src/config";
+import { ElMessage, FormInstance } from 'element-plus';
 // import { ElMessage } from 'element-plus';
 //创建实例
 const instance = axios.create({
@@ -16,9 +17,9 @@ const instance = axios.create({
 // http request 请求拦截器
 instance.interceptors.request.use(    
     config => {
-        config.headers.AcceptLanguage = getLocalStorage("locale");
+        config.headers!.AcceptLanguage = getLocalStorage("locale");
         if (localStorage.myToken) {
-            config.headers.Authorization = "Bearer "+getLocalStorage("myToken");
+            config.headers!.Authorization = "Bearer "+getLocalStorage("myToken");
         }
         else{
             console.log('no token')

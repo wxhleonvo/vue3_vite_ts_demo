@@ -1,12 +1,12 @@
-import request from '@/utils/request';
-import $http from '@/utils/httpInterceptor';
+import request from 'src/utils/request';
+//import $http from '@/utils/httpInterceptor';
 
 export const captchaImage = () => {
   return request.get('/api/captchaImage');
 };
 export const login = (params?: any) => {
   console.log('params',params);
-  return request.post('/api/Token/GetToken',params);
+  return request.post('/Token/GetToken',params);
 };
 
 // 导入问题

@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 /**
  * 自定义扩展axios模块
- * @author JJYang
+ * @author Wxh
  */
 declare module 'axios' {
     export interface AxiosInstance {

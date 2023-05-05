@@ -5,7 +5,7 @@
       :class="`el-menu-vertical-demo ${store.collapse && 'hideIcon'}`" style="height: 100vh" text-color="#ffffffa6">
       <div class="logo">
         <el-avatar :size="35" :src="Logo" />
-        <span v-if="!store.collapse">&nbsp;YangAdmin</span>
+        <span v-if="!store.collapse">&nbsp;WxhAdmin</span>
       </div>
       <el-menu-item index="/index/home">
         <el-icon>
@@ -34,7 +34,8 @@ export default defineComponent({
     const store = useUserStore();
     const router = useRouter();
     const activatedStyle = ref<string>(router.currentRoute.value.path);
-    const Logo: string = "https://q1.qlogo.cn/g?b=qq&nk=1942847253&s=100";
+    //const Logo: string = "https://q1.qlogo.cn/g?b=qq&nk=1942847253&s=100";
+    const Logo: string = "https://img.alicdn.com/imgextra/i4/O1CN01aG16y424E11XsURUd_!!6000000007358-2-tps-206-240.png";
     const selectMenu = (index: string) => {
       activatedStyle.value = index;
     };

@@ -138,6 +138,7 @@ function handleError(error: any) {
 // 对响应的数据进行自处理
 function handleData(data: any) {
     // 请求响应Code不为200时，弹出相关提示信息
+    // console.log('data',data)
     if(data.Code!==200){        
         ElMessage.error("请求失败：Code="+data.Code+",Msg="+data.Msg)
     }
@@ -149,7 +150,9 @@ function handleData(data: any) {
  * @param error 
  * @returns 
  */
-const ResponseProcessing = (error: { message:any; response: { status: any; data: any; }; }) => {
+const ResponseProcessing = (error: { code:any; message:any; response: { status: any; data: any; }; }) => {
+    // console.log('error',error);
+  let code = error.code;
   let msg = "【"+error.message+"】";
   if (error.response) {    
     switch (error.response.status) {
@@ -161,6 +164,9 @@ const ResponseProcessing = (error: { message:any; response: { status: any; data:
         break;
       case 500:
         ElMessage.warning("内部服务器错误，请联系系统管理员！"+msg);
+        break;
+      case 503:
+        ElMessage.warning("code="+code+";msg="+msg);
         break;
       default:
         return Promise.reject(error.response.data); // 返回接口返回的错误信息

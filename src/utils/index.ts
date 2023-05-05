@@ -1,7 +1,10 @@
+//加载 动态路由，根据 当前用户 权限 获得对应的菜单
 import { RouteRecordRaw } from "vue-router";
 import { IMenuItem, ITreeMenuItem, IUserRouterItem } from "../interface/menu";
 
 const modules = import.meta.glob("../view/**/**.vue");
+
+//const modules2 = import.meta.glob("src/view/frameDemo/t");
 
 interface ICache {
   [key: number]: ITreeMenuItem
@@ -9,7 +12,7 @@ interface ICache {
 /**
  * @description 转换树形结构菜单
  * @param menuList 菜单列表
- * @author JJYang
+ * @author Wxh
  */
 export const getTreeMenus = (menuList: IMenuItem[]): ITreeMenuItem[] => {
   const treeMenuList = [] as ITreeMenuItem[];
@@ -36,18 +39,24 @@ export const getTreeMenus = (menuList: IMenuItem[]): ITreeMenuItem[] => {
 /**
  * @description 转化动态路由
  * @param userRouters -用户路由的树形列表
- * @author JJYang
+ * @author Wxh
  */
 export const generateRouter = (userRouters: ITreeMenuItem[]) => {
   let newRouters: RouteRecordRaw[] = userRouters.map((router: ITreeMenuItem) => {
-    const isParent = router.pid === 0 && router.children;
-    const fileName = router.path.match(/\/([^/]*)$/)![1];
+    //const isParent = router.pid === 0 && router.children; // 判断当前节点是否还有子节点
+    const isParent = router.children; // 判断当前节点是否还有子节点
+    //const fileName = router.path.match(/\/([^/]*)$/)![1];
+    //console.log(router.rid,isParent);
     //console.log('router.path',router.path)
     //console.log('filename',fileName)
-    let d = `../view${router.path}.vue`
+    const fileName = `../view${router.path}.vue` // vue文件路径, 叶子节点该属性才有效
+    
+    //console.log(router.rid,isParent,fileName);
+    //const fileName = `../view${router.path}`
     //let d = `../view${router.path}/${fileName}.vue`
 
-    console.log('d',d)
+    //console.log('fileName',fileName)
+    //console.log('name',router.name)
     let routes: RouteRecordRaw = {
       path: router.path,
       name: router.name,
@@ -58,7 +67,7 @@ export const generateRouter = (userRouters: ITreeMenuItem[]) => {
       //component: eval(`()=>import("../view${router.path}/${fileName}.vue")`),
       component:
         modules[
-          d
+          fileName
            //`../view${router.path}/${fileName}.vue`
            // `../view${router.path}.vue`
         ]
@@ -70,6 +79,7 @@ export const generateRouter = (userRouters: ITreeMenuItem[]) => {
         import(/* @vite-ignore */ `../components/ParentView/ParentView.vue`)
     }
     if (routes && router.children) {
+      //console.log('router.children', router.children);
       routes.children = generateRouter(router.children);
     }
     return routes;
@@ -80,7 +90,7 @@ export const generateRouter = (userRouters: ITreeMenuItem[]) => {
 /**
  * @description 数组扁平化
  * @param target --目标数组
- * @author JJYang
+ * @author Wxh
  */
 export function flatter(target: any) {
   if (Array.isArray(target)) {
@@ -102,7 +112,7 @@ export function flatter(target: any) {
  * @description 深拷贝
  * @param target -目标值
  * @param map -缓存容器
- * @author JJYang
+ * @author Wxh
  */
 export const deepClone = (target: any, map: any = new Map()) => {
   if (typeof target === 'object' && target !== null) {

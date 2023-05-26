@@ -72,7 +72,7 @@
             >
             <el-popconfirm
               title="确定删除吗?"
-              @confirm="deleteMenuHandle(row.CODE)"
+              @confirm="deleteMenuHandle(row)"
             >
               <template #reference>
                 <el-button link type="primary" v-permission="'sys:menu:delete'"
@@ -134,7 +134,7 @@
   }
   
   // 删除菜单
-  const deleteMenuHandle = (id: string) => {
+  const deleteMenuHandle1 = (id: string) => {
     deleteMenu({ CODE: id }).then(() => {
       ElNotification.success({
         title: '成功',
@@ -142,8 +142,26 @@
       })
       getMenuListHandle()
     })
-  }
+  };
 
+  const deleteMenuHandle = (row:any) => {
+    
+    if(row.Children.length>0){
+        ElMessage({
+          message: '当前节点存在子节点,请先删除子节点',
+          type: "error",
+        });
+      }
+    else{
+      deleteMenu({ CODE: row.CODE }).then(() => {
+        ElMessage({
+          message: '删除菜单成功',
+          type: "success",
+        });
+        getMenuListHandle()
+      })
+    }
+  }
   </script>
   <style lang="scss" scoped>
  

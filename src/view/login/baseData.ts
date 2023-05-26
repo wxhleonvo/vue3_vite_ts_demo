@@ -18,5 +18,5 @@ export const validatePass2 = (rule: any, value: string | any[], callback: (arg0?
 
 export const rules = reactive({
     LOGIN_NAME: [{ validator: validatePass, trigger: "blur" }],
-    PASSWORD: [{ validator: validatePass2, trigger: "blur" }],
+    PASSWORD_MW: [{ validator: validatePass2, trigger: "blur" }],
 });

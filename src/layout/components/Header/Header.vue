@@ -31,7 +31,8 @@
         </el-icon>
       </span>
       <el-dropdown trigger="click" @command="handleConfigNav">
-        <span :class="`nav-config`">
+        <!--<span :class="`nav-config`">-->
+        <span class="to-scroll-right">
           <el-icon>
             <ArrowDown />
           </el-icon>

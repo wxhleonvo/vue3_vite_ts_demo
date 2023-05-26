@@ -9,7 +9,7 @@
       </div>
       <el-menu-item index="/index/home">
         <el-icon>
-          <List />
+          <House />
         </el-icon>
         <template #title>首页</template>
       </el-menu-item>

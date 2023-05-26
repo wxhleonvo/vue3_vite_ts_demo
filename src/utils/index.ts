@@ -47,9 +47,10 @@ export const generateRouter = (userRouters: ITreeMenuItem[]) => {
     const isParent = router.children; // 判断当前节点是否还有子节点
     //const fileName = router.path.match(/\/([^/]*)$/)![1];
     //console.log(router.rid,isParent);
+    //console.log(router.rid,isParent);
     //console.log('router.path',router.path)
     //console.log('filename',fileName)
-    const fileName = `../view${router.path}.vue` // vue文件路径, 叶子节点该属性才有效
+    const fileName = `../view${router.component}.vue` // vue文件路径, 叶子节点该属性才有效
     
     //console.log(router.rid,isParent,fileName);
     //const fileName = `../view${router.path}`
@@ -58,11 +59,13 @@ export const generateRouter = (userRouters: ITreeMenuItem[]) => {
     //console.log('fileName',fileName)
     //console.log('name',router.name)
     let routes: RouteRecordRaw = {
-      path: router.path,
-      name: router.name,
+      path: router.path||'', // URL为空的则复赋值为空字符，避免菜单加载报错
+      //name: router.name,
       meta: {
         icon: router.icon,
       },
+      redirect:'',
+      children:[],
       //component: (resolve) => require(d),
       //component: eval(`()=>import("../view${router.path}/${fileName}.vue")`),
       component:

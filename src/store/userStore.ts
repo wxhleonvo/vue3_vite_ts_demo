@@ -1,7 +1,7 @@
 //动态路由 菜单 权限 加载  当前用户 菜单
 import { defineStore } from 'pinia'
 import { useLocalStorage } from 'src/hooks/useLocalStorage';
-import { getUserMenu } from '../apis/user';
+import { getUserMenu } from '../api/user';
 import { IMenuItem, INavItem, ITreeMenuItem } from '../interface/menu';
 import { flatter, getTreeMenus } from '../utils/index'
 

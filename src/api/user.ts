@@ -4,6 +4,26 @@ import { IMenuItem } from "../interface/menu";
 import router from "../router/index";
 
 /**
+ * @description 获取用户菜单
+ * @param uid 
+ */
+export const getUserMenu = (uid: string) => {
+    return Fetch.request<IMenuItem[]>({
+        //url: '/api/User/GetTest',
+        url: '/api/User/GetMyMenuList',
+        method: 'post'
+        //data: { uid }
+    }).catch((err) => {
+        localStorage.clear();
+        router.replace("/login");
+    });
+
+};
+
+/**
+ * ====================以下方法无效，系统未使用==============================
+ */
+/**
  * @description 用户登录
  * @param data 
  * @interface IUserLoginReq
@@ -93,21 +113,7 @@ export interface IGetUserListItem extends IUserLoginReq {
 }
 
 
-/**
- * @description 获取用户菜单
- * @param uid 
- */
-export const getUserMenu = (uid: string) => {
-    return Fetch.request<IMenuItem[]>({
-        url: '/User/GetTest',
-        method: 'post'
-        //data: { uid }
-    }).catch((err) => {
-        localStorage.clear();
-        router.replace("/login");
-    });
 
-};
 
 /**
  * @description 获取角色列表

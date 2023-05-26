@@ -10,7 +10,8 @@ const { getLocalStorage } = useLocalStorage();
  * @description  本套配置只适用于jwtoken 额外操作请自行配置
  */
 const Fetch = axios.create({
-    baseURL: import.meta.env.VITE_APP_API_URL || "/dev-api",
+    //baseURL: import.meta.env.VITE_APP_API_URL || "/dev-api",
+    baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
 //http request 请求拦截器

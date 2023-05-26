@@ -1,12 +1,16 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import qs from 'qs'
 import { setLocalStorage, getLocalStorage } from './localstorage'
-import { URL, TIMEOUT, SOURCE_URL } from "src/config";
+import { URL, TIMEOUT } from "src/config";
 import { ElMessage, FormInstance } from 'element-plus';
+import {showLoading,hideLoading } from 'src/utils/loading'
+
+
 // import { ElMessage } from 'element-plus';
 //创建实例
 const instance = axios.create({
-    baseURL: URL,
+    //baseURL: import.meta.env.VITE_APP_API_URL || "/api",
+    baseURL: "/api", 
     timeout: TIMEOUT,
     headers: {
         'Accept': 'application/json',
@@ -16,28 +20,38 @@ const instance = axios.create({
 
 // http request 请求拦截器
 instance.interceptors.request.use(    
-    config => {
+    (config) => {
+        //ElMessage.info('请求URL='+config.baseURL);
+        //ElMessage.info('请求URL import='+import.meta.env.VITE_APP_API_URL);
+        //显示加载中提示
+        showLoading();        
         config.headers!.AcceptLanguage = getLocalStorage("locale");
-        if (localStorage.myToken) {
-            config.headers!.Authorization = "Bearer "+getLocalStorage("myToken");
-        }
-        else{
-            console.log('no token')
-        }
+        
+        const token = getLocalStorage("token") || false;        
+        if (!token===false) {
+            config.headers!.Authorization = 'Bearer '+getLocalStorage("token");
+            //config.headers!['Authorization'] = 'Bearer ' + getLocalStorage("token");
+        }        
         return config
     },
     err => {
+        ElMessage.warning('请求错误'+err);
         return Promise.reject(err)
     }
 )
 
 // http response 响应拦截器
 instance.interceptors.response.use(
-    response => {
+    response => {     
         return handleData(response.data)
     },
     error => {
+        //ElMessage.warning('响应错误'+JSON.stringify(error));
         //console.log('error',error);
+        //隐藏加载中提示
+        setTimeout(() => {
+            hideLoading()
+        }, 200);            
         ResponseProcessing(error);
         /*
         const errData = error.response.data
@@ -69,7 +83,7 @@ const get = async (url: string) => {
      可以在这里自定义封装处理方法
      ......
      */
-    console.log('get url',url)
+    //console.log('get url',url)
     try {
         return await instance
             .get(url)
@@ -83,12 +97,11 @@ const post = async (url: string, data?: any, config?: AxiosRequestConfig<any> | 
     可以在这里自定义封装处理方法
     ......
     */
-    console.log('post url',url)
     try {
         return await instance
-            .post(url, data, config)
-    } catch (error) {
-        return handleError(error)
+            .post(url, data, config);
+    } catch (error) {        
+        return handleError(error);
     }
 }
 const deleteFn = async (url: string, config?: AxiosRequestConfig<any> | undefined) => {
@@ -139,10 +152,17 @@ function handleError(error: any) {
 function handleData(data: any) {
     // 请求响应Code不为200时，弹出相关提示信息
     // console.log('data',data)
+    //ElMessage.error("handleData>响应结果="+data);
+    //隐藏加载中提示
+    setTimeout(() => {
+        hideLoading()
+    }, 200);   
+    
     if(data.Code!==200){        
-        ElMessage.error("请求失败：Code="+data.Code+",Msg="+data.Msg)
+        ElMessage.error("请求失败：Code="+data.Code+",Msg="+data.Msg);
     }
-    return data
+    
+    return data;
 }
 
 /**
@@ -156,6 +176,9 @@ const ResponseProcessing = (error: { code:any; message:any; response: { status: 
   let msg = "【"+error.message+"】";
   if (error.response) {    
     switch (error.response.status) {
+      case 400:
+        ElMessage.warning("提交失败："+msg);
+        break;
       case 401:
         ElMessage.warning("资源没有访问权限！"+msg);
         break;
@@ -166,6 +189,9 @@ const ResponseProcessing = (error: { code:any; message:any; response: { status: 
         ElMessage.warning("内部服务器错误，请联系系统管理员！"+msg);
         break;
       case 503:
+        ElMessage.warning("code="+code+";msg="+msg);
+        break;
+      case 504:
         ElMessage.warning("code="+code+";msg="+msg);
         break;
       default:

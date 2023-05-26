@@ -1,19 +1,31 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+const { resolve } = require("path");
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
-const { resolve } = require("path");
+//引入依赖-自适应移动多端适配
+import autoprefixer from "autoprefixer"
+import postcsspxtorem from "postcss-pxtorem"
+
+
 
 export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      /* 自动导入vue相关的Api
+      imports: [
+        'vue',
+        'vue-router',
+      ],
+      dts: './auto-imports.d.ts',*/
+      //resolvers: [ElementPlusResolver(), IconResolver({ prefix: 'Icon' })
+      resolvers: [ElementPlusResolver()]
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+        resolvers: [ElementPlusResolver()],
     })
   ],
   resolve: {
@@ -22,21 +34,66 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  //配置适配方案
+  /*css: {
+    postcss: {
+      plugins: [
+        autoprefixer({
+          overrideBrowserslist: [
+            "Android 4.1",
+            "iOS 7.1",
+            "Chrome > 31",
+            "ff > 31",
+            "ie >= 8",
+            "last 10 versions", // 所有主流浏览器最近10版本用
+          ],
+          grid: true
+        }),
+        postcsspxtorem({
+          rootValue: 192, // 设计稿宽度的1/ 10 例如设计稿按照 1920设计 此处就为192
+          propList: ["*", "!border"], // 除 border 外所有px 转 rem
+          selectorBlackList: [".el-"], // 过滤掉.el-开头的class，不进行rem转换
+        })
+      ],
+    }
+  },*/
+  css: {
+        postcss: {
+            plugins: [
+              postcsspxtorem({
+                    rootValue: 16,// 1rem = 16px 的大小
+                    propList: ['*']
+                }),
+                autoprefixer({
+                    grid: true
+                })
+            ]
+        },
+        preprocessorOptions: {
+          scss: {
+            additionalData: `
+              @use "./src/assets/style/main.scss" as globalScss;@use "./src/assets/style/element/index.scss" as *;
+            `,
+          },
+        },
+  },
   server: {
     port: 8088, //启动端口
     proxy: { // 配置反向代理: 开发环境请求 和 生产环境请求
-      "/dev-api": { // “dev-api” 以及前置字符串会被替换为真正域名
-        target: "http://localhost:9017/", // 请求域名，反向代理地址
+      "/api": { // “dev-api” 以及前置字符串会被替换为真正域名
+        target: "http://localhost:9019/", // 请求域名，反向代理地址
+        //target: "http://192.168.1.105:9019/", // 请求域名，反向代理地址
         secure: false, // 请求是否为https
         changeOrigin: true, // 是否跨域
-        rewrite: (path) => path.replace(/^\/dev-api/, "/api")
-      },
+        rewrite: (path) => path.replace(/^\/api/, "/api")
+      }
+      /*,
       "/prod-api": { // prod-api” 以及前置字符串会被替换为真正域名
         target: "http://localhost:9017/", // 请求域名，反向代理地址
         secure: false, // 请求是否为https
         changeOrigin: true, // 是否跨域
-        rewrite: (path) => path.replace(/^\/prod-api/, "/api")
-      }
+        rewrite: (path) => path.replace(/^\/prod-api/, "/")
+      }*/
     }
     // 设置 https 代理
     // proxy: {

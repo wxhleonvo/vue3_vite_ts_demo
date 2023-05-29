@@ -16,7 +16,7 @@
                 content="请输入用户姓名"
                 placement="right"
               >
-              <el-icon style="display: block; height: 100%"><InfoFilled /></el-icon>
+                <el-icon style="display: block; height: 100%"><InfoFilled /></el-icon>
               </el-tooltip>
             </template>
             <el-input v-model="listQuery.NAME" />
@@ -55,12 +55,10 @@
             <el-popconfirm
               title="确定删除吗?"
               @confirm="deleteHandle(row.CODE)"
-              v-if="row.NAME !== globalProperties.superAdminRole"
+              v-if="row.LOGIN_NAME !== globalProperties.superAdmin"
             >
               <template #reference>
-                <el-button link type="primary" v-permission="'sys:role:delete'"
-                v-if="row.LOGIN_NAME !== globalProperties.superAdmin"
-                  >删除</el-button
+                <el-button link type="primary">删除</el-button
                 >
               </template>
             </el-popconfirm>

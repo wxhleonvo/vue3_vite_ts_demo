@@ -8,8 +8,9 @@ import {
   import { generateRouter } from "../utils/index";
   import Routers from "./generator-routers";
   import { useLocalStorage } from "../hooks/useLocalStorage";
-  import { useUserStore } from '../store/userStore'
-  
+  import { useUserStore } from '../store/userStore';
+  import NProgress from 'nprogress';
+  import 'nprogress/nprogress.css';
   
  
   
@@ -40,6 +41,8 @@ import {
 
   //验证请求url，确定是否需要返回登录页面
   router.beforeEach(async (to, from, next) => {
+    // 页面渲染成功之后，展示进度条（实际效果：Mac的Chrome就是在页面顶部有条2px左右的进度条）
+    NProgress.start();
     const store = useUserStore();
     const token = getLocalStorage("token") || false;
     const userRouters = store.userRouters;
@@ -51,6 +54,7 @@ import {
     //console.log('isExistWhiteUrl', isExistWhiteUrl); // 
     //console.log('!token>',!token);
     //console.log('to.name>',to.name);
+    //console.log('to>Start',to);
 
     if(isExistWhiteUrl){ //存在白名单
       if (token && to.name === ELOGINSTATE.ISLOGIN) {
@@ -121,5 +125,10 @@ import {
     }
     */
   });
-  
+
+  // 页面加载成功之后，关闭进度条
+  router.afterEach(to => {
+    NProgress.done();
+    //console.log('to>End',to);
+  });
   export default router;

@@ -175,11 +175,14 @@
     };
     //监听键盘大小写状态
     const handleCapsStatus = (event:any)=> {
+      //console.log('event',event);
       // 检测caps lock状态      
-      if (event.getModifierState('CapsLock')) {
-        capsVisible.value = true;
-      } else {
-        capsVisible.value = false;
+      if(event.getModifierState){
+        if (event.getModifierState('CapsLock')) {
+          capsVisible.value = true;
+        } else {
+          capsVisible.value = false;
+        }
       }
     };
     //关闭监听

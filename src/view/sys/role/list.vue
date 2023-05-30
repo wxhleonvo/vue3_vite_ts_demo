@@ -37,7 +37,6 @@
               link
               @click="showModal(row)"
               v-permission="'sys:role:edit'"
-              v-if="row.NAME !== globalProperties.superAdminRole"
               >编辑</el-button
             >
             <el-popconfirm

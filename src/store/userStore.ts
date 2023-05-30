@@ -1,7 +1,8 @@
 //动态路由 菜单 权限 加载  当前用户 菜单
 import { defineStore } from 'pinia'
 import { useLocalStorage } from 'src/hooks/useLocalStorage';
-import { getUserMenu } from '../api/user';
+//import { getUserMenu } from '../api/user';
+import { getUserMenu } from '../api/sysUser';
 import { IMenuItem, INavItem, ITreeMenuItem } from '../interface/menu';
 import { flatter, getTreeMenus } from '../utils/index'
 
@@ -19,12 +20,19 @@ export const useUserStore = defineStore('user', {
     actions: {
         async getMenuList() {
             const { getLocalStorage } = useLocalStorage();
-            this.menuList = await getUserMenu(getLocalStorage('uid')) as IMenuItem[];
+            //this.menuList = await getUserMenu(getLocalStorage('uid')) as IMenuItem[];
+            //this.menuList = await getUserMenu() as IMenuItem[];
+            
+            const retData = await getUserMenu();            
+            this.menuList = retData.Data as IMenuItem[];
             //console.log('getMenuList》getusermenu', this.menuList)
         },
         // 获取用户树形结构菜单
-        async setUserRouters(uid: string) {            
-            const menuList = await getUserMenu(uid) as IMenuItem[];
+        //async setUserRouters(uid: string) {     
+        async setUserRouters() {                        
+            //const menuList = await getUserMenu(uid) as IMenuItem[];
+            const retData = await getUserMenu();            
+            const menuList = retData.Data as IMenuItem[];
             this.menuList = menuList;
             //console.log('setUserRouters》getusermenu', this.menuList)
             this.userRouters = getTreeMenus(menuList);

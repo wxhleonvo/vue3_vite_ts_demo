@@ -82,8 +82,8 @@
       const ruleFormRef = ref();
       const router = useRouter();
       const ruleForm = reactive({
-        LOGIN_NAME: "", //superadmin
-        PASSWORD_MW:"",//密码明文 ABcd12#$
+        LOGIN_NAME: "superadmin", //superadmin
+        PASSWORD_MW:"ABcd12#$",//密码明文 ABcd12#$
         PASSWORD: "",//md5加密后密文  ABcd12#$  加密后 afcc59d7787fc831e52a591b158151a0        
       });
       //配置信息
@@ -296,6 +296,15 @@
   </script>
   
   <style lang="scss" scoped>
+
+.login-root {
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    background: radial-gradient(circle at 10% 10%, rgba(245, 164, 227, 0.4) 10%, transparent 10.2%) fixed, radial-gradient(circle at 10% 10%, rgb(255, 255, 255) 10%, transparent 10.2%), radial-gradient(circle at 90% 85%, rgba(94, 226, 255, 0.4) 20%, transparent 20.2%), radial-gradient(circle at 90% 85%, white 20%, transparent 20.2%), linear-gradient(200deg, rgb(94, 226, 255) 0%, rgb(245, 164, 227) 60%);
+    transition: background 0.5s ease 0s;
+}
+
   .login-wrap {
   position: absolute;
   top: 0;

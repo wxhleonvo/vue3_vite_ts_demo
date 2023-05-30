@@ -194,7 +194,7 @@
         //formContent[key] = row[key] || formContent[key];
         //console.log(key,row[key],formContent[key]);
       });
-      console.log('row',row);
+      //console.log('row',row);
       if (row.CODE) {
         
         menuId.value = row.CODE

@@ -29,3 +29,8 @@ export const getUserInfo = (data: any) => {
 export function updateUserPassword(data: any): any {
     return request.post("/User/EditPassword",data);
 }
+
+// 获得当前用户左边的功能菜单
+export function getUserMenu(): any {
+    return request.post("/User/GetMyMenuList");
+}

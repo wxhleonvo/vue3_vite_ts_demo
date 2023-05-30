@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
+/*暂未使用当前文件*/
 /**
  * 自定义扩展axios模块
  * @author Wxh

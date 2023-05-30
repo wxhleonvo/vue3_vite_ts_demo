@@ -1,11 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
 import Layout from "../layout/index.vue";
-const Routers: RouteRecordRaw[] = [
-  {
-    path: "/hello",
-    //name: "frameDemo-hello",
-    component: () => import(/* chunkName: login */ "src/view/frameDemo/hello.vue"),
-  },
+const Routers: RouteRecordRaw[] = [  
   {
     path: "/",
     redirect: "/index/home",

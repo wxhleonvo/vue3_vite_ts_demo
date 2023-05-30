@@ -42,11 +42,12 @@ import {
   //验证请求url，确定是否需要返回登录页面
   router.beforeEach(async (to, from, next) => {
     // 页面渲染成功之后，展示进度条（实际效果：Mac的Chrome就是在页面顶部有条2px左右的进度条）
-    NProgress.start();
+    NProgress.start(); 
+    
     const store = useUserStore();
     const token = getLocalStorage("token") || false;
     const userRouters = store.userRouters;
-    const uid = getLocalStorage("uid");
+    //const uid = getLocalStorage("uid");
     
 
     const isExistWhiteUrl = checkIsExistWhiteUrl(to.path);
@@ -56,7 +57,7 @@ import {
     //console.log('to.name>',to.name);
     //console.log('to>Start',to);
 
-    if(isExistWhiteUrl){ //存在白名单
+    if(isExistWhiteUrl){ //存在白名单,非必须携带token
       if (token && to.name === ELOGINSTATE.ISLOGIN) {
         //console.log('存在白名单,且已登录，访问登陆页面时，则直接指向管理后台首页');
         next({ path: "/" });
@@ -78,13 +79,18 @@ import {
       else { // 
         // 已登录但是没有用户菜单
         //console.log('不存在白名单,已登录,打开当前输入的页面');
+        //console.log('userRouters',userRouters);
         if (userRouters.length === 0) {
-          await store.setUserRouters(uid);
+          //await store.setUserRouters(uid);
+          await store.setUserRouters();
           let newRoutes = generateRouter(store.userRouters);
           const layout = routes.find((item: RouteRecordRaw) => item.name == "Layout")!;
           layout.children = [...Routers, ...newRoutes];
           router.addRoute(layout);
           router.replace(to.path);
+        }
+        else{
+
         }
         store.setNavList(to.fullPath);
         next();

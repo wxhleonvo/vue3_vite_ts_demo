@@ -58,9 +58,11 @@ export const generateRouter = (userRouters: ITreeMenuItem[]) => {
 
     //console.log('fileName',fileName)
     //console.log('name',router.name)
+    //console.log('code',router);
     let routes: RouteRecordRaw = {
       path: router.path||'', // URL为空的则复赋值为空字符，避免菜单加载报错
       //name: router.name,
+      name: router.rid.toString(),
       meta: {
         icon: router.icon,
       },

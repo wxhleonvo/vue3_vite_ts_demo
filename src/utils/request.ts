@@ -151,7 +151,7 @@ function handleError(error: any) {
 // 对响应的数据进行自处理
 function handleData(data: any) {
     // 请求响应Code不为200时，弹出相关提示信息
-    // console.log('data',data)
+    //console.log('data',data)
     //ElMessage.error("handleData>响应结果="+data);
     //隐藏加载中提示
     setTimeout(() => {

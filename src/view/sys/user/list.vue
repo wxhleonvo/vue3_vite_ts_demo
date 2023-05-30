@@ -43,6 +43,14 @@
         <el-table-column prop="NAME" label="姓名"></el-table-column>
         <el-table-column prop="LOGIN_NAME" label="登录账号"></el-table-column>
         <el-table-column prop="MOBILE" label="手机号码"></el-table-column>
+        <el-table-column label="启/禁用" width="80" align="center">
+          <template #default="{ row }">
+            <span class="flex">
+              <el-icon color="#67c23a" v-if="row.IS_SHOW"><Select /></el-icon>
+              <el-icon color="#ff0332" v-else><CloseBold /></el-icon>
+            </span>
+          </template>
+        </el-table-column> 
         <el-table-column label="操作" width="180">
           <template #default="{ row }">
             <el-button
@@ -133,8 +141,9 @@
   // 获取角色列表
   const roleList = ref()
   const getRoleListHandle = async () => {
-    const res = await getRoleList({ CurrentPage: 1, PageSize: 100 });
+    const res = await getRoleList({ CurrentPage: 1, PageSize: 100, IS_SHOW:1 });
     roleList.value = res.Data;
+    
   }
   
   // 列表回显角色名称 

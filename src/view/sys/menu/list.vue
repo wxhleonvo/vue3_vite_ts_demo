@@ -185,7 +185,7 @@
 
   .is-center {
     .cell {
-      font-size: 12px;
+      font-size: 14px;
       justify-content: center;
     }
   }
@@ -193,7 +193,7 @@
   .is-left {
     .cell {
       padding-left: 10px;
-      font-size: 12px;
+      font-size: 14px;
     }
   }
 

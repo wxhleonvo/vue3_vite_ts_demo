@@ -30,6 +30,14 @@
         style="margin-top: 20px"
       >
         <el-table-column prop="NAME" label="角色名称"></el-table-column>
+        <el-table-column label="启/禁用" width="80" align="center">
+          <template #default="{ row }">
+            <span class="flex">
+              <el-icon color="#67c23a" v-if="row.IS_SHOW"><Select /></el-icon>
+              <el-icon color="#ff0332" v-else><CloseBold /></el-icon>
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="180">
           <template #default="{ row }">
             <el-button

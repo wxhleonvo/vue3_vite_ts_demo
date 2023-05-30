@@ -21,6 +21,11 @@
             node-key="CODE"
           />
         </el-form-item>
+        <el-form-item label="是否启用：" prop="IS_SHOW">
+          <el-radio-group v-model="formContent.IS_SHOW">
+            <el-radio v-for="(value, key) in menuHideDic" :key="key" :label="key" >{{ value }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="addVisible = false">取消</el-button>
@@ -39,7 +44,10 @@
   import { createRole, updateRole, getMenuListByRole } from 'src/api/sysRole'
   import { ElNotification } from 'element-plus'
   import type { FormInstance, FormRules } from 'element-plus'
-  
+  import {
+    menuHideDic
+  } from 'src/dictionary/menu';
+
   //全局方法使用：建议用这种方式来解构出proxy
   import useCurrentInstance from "src/utils/useCurrentInstance";
   const { proxy } = useCurrentInstance();
@@ -53,8 +61,10 @@
   
   // 添加角色
   const addVisible = ref(false)
-  const formContent = reactive<{ [key: string]: string }>({    
+  //const formContent = reactive<{ [key: string]: string }>({  
+  const formContent = reactive<any>({  
     NAME: '',
+    IS_SHOW: menuHideDic.default,
   })
   const menuId = ref()
   
@@ -69,6 +79,13 @@
         trigger: ['blur', 'change'],
       },
     ],
+    IS_SHOW: [
+      {
+        required: true,
+        message: '请选择是否启用',
+        trigger: ['blur', 'change'],
+      },
+    ]
   })
   
   // 展示弹窗
@@ -94,6 +111,7 @@
             menuTreeRef.value.setChecked(node, true);
         })
       });
+      formContent.IS_SHOW = row.IS_SHOW?"1":"0";//数字转换字符类型
       //console.log('menuTreeRef',menuTreeRef.value);    
       menuId.value = row.CODE
       modalName.value = '编辑角色'
@@ -111,11 +129,13 @@
   const submitForm = (formEl: FormInstance | undefined) => {
     formEl?.validate().then(() => {
       // 获取选中的菜单key
-      const checkedKeys = menuTreeRef.value.getCheckedKeys()
-      const halfCheckedKeys = menuTreeRef.value.getHalfCheckedKeys()
-      const allKeys = [...checkedKeys, ...halfCheckedKeys]
-        
-      let _api: Function
+      const checkedKeys = menuTreeRef.value.getCheckedKeys();
+      const halfCheckedKeys = menuTreeRef.value.getHalfCheckedKeys();
+      const allKeys = [...checkedKeys, ...halfCheckedKeys];
+      
+      formContent.IS_SHOW = formContent.IS_SHOW === '1'?1:0;
+
+      let _api: Function;
       let sendDate: any = {
         ...formContent,
         //role_permission: allKeys.join(','),

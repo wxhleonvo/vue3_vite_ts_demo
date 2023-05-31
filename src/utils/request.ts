@@ -1,10 +1,11 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs'
 import { setLocalStorage, getLocalStorage } from './localstorage'
 import { URL, TIMEOUT } from "src/config";
 import { ElMessage, FormInstance } from 'element-plus';
 import {showLoading,hideLoading } from 'src/utils/loading'
 
+import Vrouter from "src/router";
 
 // import { ElMessage } from 'element-plus';
 //创建实例
@@ -177,10 +178,21 @@ const ResponseProcessing = (error: { code:any; message:any; response: { status: 
   if (error.response) {    
     switch (error.response.status) {
       case 400:
-        ElMessage.warning("提交失败："+msg);
+        ElMessage.warning("提交失败！"+msg);
         break;
       case 401:
-        ElMessage.warning("资源没有访问权限！"+msg);
+        ElMessage.warning("资源没有访问权限！"+msg);        
+        try {     
+            const router = Vrouter;
+            //console.log('router',router);
+            //router.push('/login');
+            //router.replace('/login');
+            //退出，重新跳转登录页面
+            localStorage.clear();
+            router.go(0);
+        } catch (error) {
+            console.log(error);
+        }
         break;
       case 404:
         ElMessage.warning("接口不存在，请检查接口地址是否正确！"+msg);
